@@ -9,10 +9,9 @@ Login form
 Enviromental variables set for USERNAME and PASSWORD
 USERNAME = tcaldwell89
 PASSWORD = Relic2015!
- */
+*/
 
 public class Login extends JFrame {
-
     private JTextField txtFieldUsername;
     private JPasswordField txtFieldPassword;
     private JButton btnLoginOk;
