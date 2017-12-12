@@ -38,7 +38,7 @@ class TwitterBotGUI extends JFrame {
 
 
     private void configureComponents() {
-        setTitle("Final Fantasy Twitter Bot");
+        setTitle("Twitter Bot");
         setContentPane(mainPanel);
         setPreferredSize(new Dimension(750, 750));
         listModel = new DefaultListModel<>();
