@@ -19,5 +19,7 @@
     <orderEntry type="library" name="Maven: org.codehaus.mojo:animal-sniffer-annotations:1.14" level="project" />
     <orderEntry type="library" name="Maven: org.twitter4j:twitter4j-core:4.0.6" level="project" />
     <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.21.0" level="project" />
+    <orderEntry type="library" name="Maven: org.twitter4j:twitter4j-async:4.0.6" level="project" />
+    <orderEntry type="library" name="Maven: org.twitter4j:twitter4j-stream:4.0.6" level="project" />
   </component>
 </module>

@@ -1,6 +1,8 @@
 package com.tyler;
 
+import jdk.nashorn.internal.scripts.JO;
 import twitter4j.*;
+import twitter4j.conf.ConfigurationBuilder;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,10 +22,14 @@ class TwitterBotGUI extends JFrame {
     private JButton btnExit;
     private JComboBox<String> cboFollowers;
 
-    private JList<String> listStatuses;
+
     private JLabel infoLabel;
     private JButton btnDatabase;
-    private DefaultListModel<String> listModel;
+    private JList<String> listStatuses;
+    private JButton btnRetweet;
+    private JButton btnReply;
+    private DefaultListModel<String> listModelStatuses;
+
 
     private StatusesDB database;
     private TwitterObj twitterMaster;
@@ -41,9 +47,11 @@ class TwitterBotGUI extends JFrame {
         setTitle("Twitter Bot");
         setContentPane(mainPanel);
         setPreferredSize(new Dimension(750, 750));
-        listModel = new DefaultListModel<>();
-        listStatuses.setModel(listModel);
+
+        listModelStatuses = new DefaultListModel<>();
+        listStatuses.setModel(listModelStatuses);
         listStatuses.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
         database = new StatusesDB();
         twitterMaster = new TwitterObj();
         pack();
@@ -52,6 +60,7 @@ class TwitterBotGUI extends JFrame {
         comboBoxSetUp();
 
     }
+
     // Populate the comboBox with a list of people I follow on Twitter
     private void comboBoxSetUp() {
         Twitter t = twitterMaster.configureTwitter();
@@ -86,12 +95,12 @@ class TwitterBotGUI extends JFrame {
         btnDisplayHomeTimeline.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                listModel.removeAllElements();
+                listModelStatuses.removeAllElements();
                 cboFollowers.setSelectedIndex(-1);
                 Twitter t = twitterMaster.configureTwitter();
                 List<Status> myStatuses = myTimeline(t);
                 for (Status s : myStatuses) {
-                    listModel.addElement(s.getUser().getName() + " --- " + s.getText());
+                    listModelStatuses.addElement(s.getUser().getName() + " --- " + s.getText());
                 }
                 cboFollowers.setSelectedIndex(-1);
                 infoLabel.setText("Showing Home Timeline");
@@ -101,12 +110,12 @@ class TwitterBotGUI extends JFrame {
         btnDatabase.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                listModel.removeAllElements();
+                listModelStatuses.removeAllElements();
                 cboFollowers.setSelectedIndex(-1);
                 infoLabel.setText("Status's created by Twitter Bot");
                 ArrayList<StatusObj> dbStatuses = database.getStatuses();
                 for (StatusObj s : dbStatuses) {
-                    listModel.addElement(s.getText() + "  Date Created: " + s.getCreatedAt());
+                    listModelStatuses.addElement(s.getText() + "  Date Created: " + s.getCreatedAt());
                 }
             }
         });
@@ -114,13 +123,13 @@ class TwitterBotGUI extends JFrame {
         cboFollowers.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                listModel.removeAllElements();
+                listModelStatuses.removeAllElements();
                 String friend = (String) cboFollowers.getSelectedItem();
                 Twitter t = twitterMaster.configureTwitter();
                 List<Status> statuses = friendTimeLine(t, friend);
                 if (statuses != null) {
                     for (Status s : statuses) {
-                        listModel.addElement(s.getUser().getName() + " --- " + s.getText());
+                        listModelStatuses.addElement(s.getText());
                     }
                 }
                 try {
@@ -132,6 +141,69 @@ class TwitterBotGUI extends JFrame {
                 } catch (TwitterException twe) { twe.getMessage(); }
             }
         });
+
+        // Retweets the currently selected status
+        btnRetweet.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (listStatuses.getSelectedValue() == null || cboFollowers.getSelectedIndex() == -1) {
+                    JOptionPane.showMessageDialog(TwitterBotGUI.this, "Please select a tweet from a friend");
+                    return;
+                }
+                try {
+                    String friend = (String) cboFollowers.getSelectedItem();
+                    Twitter t = twitterMaster.configureTwitter();
+                    String[] search = new String[]{friend};
+                    ResponseList<User> users = t.lookupUsers(search);
+                    String text = listStatuses.getSelectedValue();
+                    for (User user : users) {
+                        if (user.getStatus() != null) {
+                            List<Status> statuses = t.getUserTimeline(user.getScreenName());
+                            for (Status s : statuses) {
+                                if (text.equalsIgnoreCase(s.getText())) {
+                                    long id = s.getId();
+                                    t.retweetStatus(id);
+                                    infoLabel.setText("Retweeted " + user.getScreenName());
+                                }
+                            }
+                        }
+                    }
+                } catch (TwitterException twe) { twe.getMessage(); }
+            }
+        });
+        // Replies to the user
+        btnReply.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (listStatuses.getSelectedValue() == null || cboFollowers.getSelectedIndex() == -1) {
+                    JOptionPane.showMessageDialog(TwitterBotGUI.this, "Please select a tweet from a friend");
+                    return;
+                }
+                try {
+                    String friend = (String) cboFollowers.getSelectedItem();
+                    Twitter t = twitterMaster.configureTwitter();
+                    String[] search = new String[]{friend};
+                    ResponseList<User> users = t.lookupUsers(search);
+                    String content = listStatuses.getSelectedValue();
+                    for (User user : users) {
+                        if (user.getStatus() != null) {
+                            List<Status> statuses = t.getUserTimeline(user.getScreenName());
+                            for (Status s : statuses) {
+                                if (content.equalsIgnoreCase(s.getText())) {
+                                    String replyText = JOptionPane.showInputDialog("");
+                                    long id = s.getId();
+                                    StatusUpdate statUpdate = new StatusUpdate("@" + s.getUser().getScreenName() + "  " + replyText);
+                                    t.updateStatus(statUpdate.inReplyToStatusId(id));
+
+                                    infoLabel.setText("Replied to " + user.getScreenName());
+                                }
+                            }
+                        }
+                    }
+                } catch (TwitterException twe) { twe.getMessage(); }
+            }
+        });
+
         // Exits Program
         btnExit.addActionListener(new ActionListener() {
             @Override
