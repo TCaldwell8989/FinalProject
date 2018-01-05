@@ -69,22 +69,6 @@
           <text value="Friends"/>
         </properties>
       </component>
-      <component id="192ce" class="javax.swing.JButton" binding="btnExit">
-        <constraints>
-          <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Exit"/>
-        </properties>
-      </component>
-      <component id="71c7e" class="javax.swing.JButton" binding="btnDatabase">
-        <constraints>
-          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Database Statuses"/>
-        </properties>
-      </component>
       <component id="53a64" class="javax.swing.JButton" binding="btnUpdateStatus">
         <constraints>
           <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
@@ -101,20 +85,36 @@
           <text value="New Status"/>
         </properties>
       </component>
-      <component id="a64f" class="javax.swing.JButton" binding="btnReply">
+      <component id="71c7e" class="javax.swing.JButton" binding="btnDatabase">
         <constraints>
-          <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Reply"/>
+          <text value="Database Statuses"/>
+        </properties>
+      </component>
+      <component id="192ce" class="javax.swing.JButton" binding="btnExit">
+        <constraints>
+          <grid row="7" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Exit"/>
         </properties>
       </component>
       <component id="d19a" class="javax.swing.JButton" binding="btnRetweet">
         <constraints>
-          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Retweet"/>
+        </properties>
+      </component>
+      <component id="a64f" class="javax.swing.JButton" binding="btnReply">
+        <constraints>
+          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Reply"/>
         </properties>
       </component>
     </children>
